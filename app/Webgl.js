@@ -37,8 +37,9 @@ export default class WebGL {
     this.initLights();
     this.initObjects();
 
-  }
+    if (window.DEBUG) this.initGUI();
 
+  }
   initPostprocessing() {
     this.composer = new WAGNER.Composer(this.renderer);
     this.composer.setSize(window.innerWidth, window.innerHeight);
@@ -56,6 +57,9 @@ export default class WebGL {
     this.cube = new Cube();
     this.cube.position.set(0, 0, 0);
     this.scene.add(this.cube);
+  }
+  initGUI() {
+    console.log('init gui');
   }
   render() {
     if (this.params.postProcessing) {
