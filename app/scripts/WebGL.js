@@ -60,7 +60,6 @@ export default class WebGL {
     this.scene.add(this.cube);
   }
   initGUI() {
-    console.log('init gui');
     this.folder = window.gui.addFolder(this.params.name);
     this.folder.add(this.params, 'postProcessing');
     this.folder.add(this.params, 'keyboard');
