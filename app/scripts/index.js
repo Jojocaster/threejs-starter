@@ -1,6 +1,6 @@
 import WebGL from './WebGL';
 import deviceType from 'ua-device-type';
-import Modes from './Modes';
+import LOL from './LOL';
 import domReady from 'domready';
 import raf from 'raf';
 import dat from 'dat-gui';

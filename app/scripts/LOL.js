@@ -3,9 +3,11 @@
 */
 import url from 'fast-url-parser';
 url.queryString = require('querystringparser');
+import Konami from 'konami-js';
 
-class Modes {
+class LOL {
   constructor() {
+    new Konami(this.konami.bind(this));
     this.parseQuery();
     window.DEVMODE = false;
   }
@@ -15,5 +17,8 @@ class Modes {
       window.DEVMODE = true;
     }
   }
+  konami() {
+    console.log('konami');
+  }
 }
-export default new Modes();
+export default new LOL();
