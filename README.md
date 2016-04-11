@@ -1,5 +1,9 @@
-threejs-starter-kit
+threejs-starter
 ===================
+
+WIP
+
+
 
 It uses Three.js and Greensock as depencies.
 
@@ -20,3 +24,5 @@ npm run build
 ```
 
 You are good to go !
+
+Fork of [threejs-starter-kit] (https://github.com/vdaguenet/threejs-starter-kit)
