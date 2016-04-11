@@ -1,19 +1,27 @@
 import THREE from 'three';
 window.THREE = THREE;
 import WAGNER from '@superguigui/wagner';
-// const VignettePass = require('./postprocessing/vignette-white/VignettePass');
+
+// Passes
 const FXAAPass = require('@superguigui/wagner/src/passes/fxaa/FXAAPASS');
 const VignettePass = require('@superguigui/wagner/src/passes/vignette/VignettePass');
+
+// Objects
 import Cube from './objects/Cube';
 
-export default class Webgl {
+export default class WebGL {
   constructor(params) {
     this.params = {
+      device: params.device || 'desktop',
       postProcessing: params.postProcessing || false,
       keyboard: params.keyboard || false,
       mouse: params.mouse || false,
       touch: params.touch || false,
     };
+
+    this.mouse = new THREE.Vector2();
+    this.originalMouse = new THREE.Vector2();
+    this.raycaster = new THREE.Raycaster();
 
     this.scene = new THREE.Scene();
 
@@ -26,10 +34,9 @@ export default class Webgl {
 
     this.composer = null;
     this.initPostprocessing();
+    this.initLights();
+    this.initObjects();
 
-    this.cube = new Cube();
-    this.cube.position.set(0, 0, 0);
-    this.scene.add(this.cube);
   }
 
   initPostprocessing() {
@@ -41,6 +48,14 @@ export default class Webgl {
     this.fxaaPass = new FXAAPass();
     this.vignettePass = new VignettePass();
 
+  }
+  initLights() {
+
+  }
+  initObjects() {
+    this.cube = new Cube();
+    this.cube.position.set(0, 0, 0);
+    this.scene.add(this.cube);
   }
   render() {
     if (this.params.postProcessing) {
@@ -57,6 +72,13 @@ export default class Webgl {
     }
 
     this.cube.update();
+  }
+  rayCast() {
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+    if (intersects.length > 0) {
+      console.log('yo');
+    }
   }
   // Events
   resize(width, height) {

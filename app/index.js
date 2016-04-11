@@ -1,4 +1,4 @@
-import Webgl from './Webgl';
+import WebGL from './WebGL';
 import deviceType from 'ua-device-type';
 import domReady from 'domready';
 import raf from 'raf';
@@ -8,68 +8,69 @@ import 'gsap';
 // Vars
 window.DEBUG = true;
 let device;
-let webgl;
+let webGL;
 let gui;
 
 
 function animate() {
   raf(animate);
-  webgl.render();
+  webGL.render();
 }
 
 // Events
 function resize() {
-  webgl.resize(window.innerWidth, window.innerHeight);
+  webGL.resize(window.innerWidth, window.innerHeight);
 }
 // KeyBoard
 function keyPress(e) {
-  webgl.keyPress(e);
+  webGL.keyPress(e);
 }
 function keyDown(e) {
-  webgl.keyDown(e);
+  webGL.keyDown(e);
 }
 function keyUp(e) {
-  webgl.keyUp(e);
+  webGL.keyUp(e);
 }
 // Mouse
 function click(e) {
-  webgl.click(e.clientX, e.clientY, e.timeStamp);
+  webGL.click(e.clientX, e.clientY, e.timeStamp);
 }
 function mouseMove(e) {
-  webgl.mouseMove(e.touches);
+  webGL.mouseMove(e.touches);
 }
 // Touch
 function touchStart(e) {
-  webgl.touchStart(e.touches);
+  webGL.touchStart(e.touches);
 }
 function touchEnd(e) {
-  webgl.touchEnd(e.touches);
+  webGL.touchEnd(e.touches);
 }
 function touchMove(e) {
-  webgl.touchMove(e.touches);
+  webGL.touchMove(e.touches);
 }
 
 domReady(() => {
   device = deviceType(navigator.userAgent);
   document.querySelector('html').classList.add(device);
-
-  webgl = new Webgl({
+  // WebGL
+  webGL = new WebGL({
+    device,
     size: {
       width: window.innerWidth,
       height: window.innerHeight,
     },
-    keyboard: true,
-    mouse: true,
+    keyboard: false,
+    mouse: false,
   });
-  document.body.appendChild(webgl.renderer.domElement);
+  document.body.appendChild(webGL.renderer.domElement);
 
   if (window.DEBUG) {
     gui = new dat.GUI();
     const webGLFolder = gui.addFolder('WebGL');
-    webGLFolder.add(webgl.params, 'postProcessing');
-    webGLFolder.add(webgl.params, 'keyboard');
-    webGLFolder.add(webgl.params, 'mouse');
-    webGLFolder.add(webgl.params, 'touch');
+    webGLFolder.add(webGL.params, 'postProcessing');
+    webGLFolder.add(webGL.params, 'keyboard');
+    webGLFolder.add(webGL.params, 'mouse');
+    webGLFolder.add(webGL.params, 'touch');
     webGLFolder.open();
   }
 
