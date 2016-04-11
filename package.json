@@ -15,10 +15,13 @@
   "author": "Valentin Daguenet <valentin.daguenet@gmail.com> (http://vdaguenet.fr)",
   "license": "MIT",
   "dependencies": {
+    "@superguigui/wagner": "^0.1.2",
     "dat-gui": "*",
+    "domready": "^1.0.8",
     "gsap": "*",
     "raf": "*",
-    "three": "*"
+    "three": "*",
+    "ua-device-type": "0.0.4"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.2",
