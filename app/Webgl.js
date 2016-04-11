@@ -12,6 +12,7 @@ import Cube from './objects/Cube';
 export default class WebGL {
   constructor(params) {
     this.params = {
+      name: params.name || 'WebGL',
       device: params.device || 'desktop',
       postProcessing: params.postProcessing || false,
       keyboard: params.keyboard || false,
@@ -37,7 +38,7 @@ export default class WebGL {
     this.initLights();
     this.initObjects();
 
-    if (window.DEBUG) this.initGUI();
+    if (window.DEBUG || window.DEVMODE) this.initGUI();
 
   }
   initPostprocessing() {
@@ -60,6 +61,20 @@ export default class WebGL {
   }
   initGUI() {
     console.log('init gui');
+    this.folder = window.gui.addFolder(this.params.name);
+    this.folder.add(this.params, 'postProcessing');
+    this.folder.add(this.params, 'keyboard');
+    this.folder.add(this.params, 'mouse');
+    this.folder.add(this.params, 'touch');
+
+    // init child GUI
+    for (let i = 0; i < this.scene.children.length; i++) {
+      const child = this.scene.children[i];
+      if (typeof child.addGUI === 'function') {
+        child.addGUI(this.folder);
+      }
+    }
+    this.folder.open();
   }
   render() {
     if (this.params.postProcessing) {

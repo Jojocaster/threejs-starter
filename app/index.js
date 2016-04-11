@@ -1,5 +1,6 @@
 import WebGL from './WebGL';
 import deviceType from 'ua-device-type';
+import Modes from './Modes';
 import domReady from 'domready';
 import raf from 'raf';
 import dat from 'dat-gui';
@@ -9,7 +10,6 @@ import 'gsap';
 window.DEBUG = true;
 let device;
 let webGL;
-let gui;
 
 
 function animate() {
@@ -52,9 +52,15 @@ function touchMove(e) {
 domReady(() => {
   device = deviceType(navigator.userAgent);
   document.querySelector('html').classList.add(device);
+
+  if (window.DEBUG || window.DEVMODE) {
+    window.gui = new dat.GUI();
+  }
   // WebGL
   webGL = new WebGL({
     device,
+    name: 'EXPERIMENT',
+    postProcessing: true,
     size: {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -63,16 +69,6 @@ domReady(() => {
     mouse: false,
   });
   document.body.appendChild(webGL.renderer.domElement);
-
-  if (window.DEBUG) {
-    gui = new dat.GUI();
-    const webGLFolder = gui.addFolder('WebGL');
-    webGLFolder.add(webGL.params, 'postProcessing');
-    webGLFolder.add(webGL.params, 'keyboard');
-    webGLFolder.add(webGL.params, 'mouse');
-    webGLFolder.add(webGL.params, 'touch');
-    webGLFolder.open();
-  }
 
   // Events
   window.addEventListener('resize', resize);

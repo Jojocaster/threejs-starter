@@ -13,7 +13,9 @@ export default class Cube extends THREE.Object3D {
 
     this.add(this.mesh);
   }
-
+  addGUI(folder) {
+    this.folder = folder.addFolder('Cube');
+  }
   update() {
     this.rotation.x += 0.01;
     this.rotation.z += 0.01;
