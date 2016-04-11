@@ -1,5 +1,6 @@
 /*
-* Mode for differents user
+* Class LOL
+* With developer mode and Konami
 */
 import url from 'fast-url-parser';
 url.queryString = require('querystringparser');
