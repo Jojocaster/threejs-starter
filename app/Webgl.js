@@ -37,6 +37,7 @@ export default class WebGL {
     this.initLights();
     this.initObjects();
 
+
   }
 
   initPostprocessing() {
