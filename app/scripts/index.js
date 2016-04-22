@@ -36,7 +36,7 @@ function click(e) {
   webGL.click(e.clientX, e.clientY, e.timeStamp);
 }
 function mouseMove(e) {
-  webGL.mouseMove(e.touches);
+  webGL.mouseMove(e.clientX, e.clientY, e.timeStamp);
 }
 // Touch
 function touchStart(e) {

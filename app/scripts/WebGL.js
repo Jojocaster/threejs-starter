@@ -5,6 +5,7 @@ import WAGNER from '@superguigui/wagner';
 // Passes
 const FXAAPass = require('@superguigui/wagner/src/passes/fxaa/FXAAPASS');
 const VignettePass = require('@superguigui/wagner/src/passes/vignette/VignettePass');
+const NoisePass = require('@superguigui/wagner/src/passes/noise/noise');
 
 // Objects
 import Cube from './objects/Cube';
@@ -33,6 +34,7 @@ export default class WebGL {
     this.renderer.setSize(params.size.width, params.size.height);
     this.renderer.setClearColor(0x262626);
 
+
     this.composer = null;
     this.initPostprocessing();
     this.initLights();
@@ -46,9 +48,14 @@ export default class WebGL {
     this.composer.setSize(window.innerWidth, window.innerHeight);
     window.composer = this.composer;
 
-    // Passes
+    // Add pass and automatic gui
+    this.passes = [];
     this.fxaaPass = new FXAAPass();
+    this.passes.push(this.fxaaPass);
+    this.noisePass = new NoisePass();
+    this.passes.push(this.noisePass);
     this.vignettePass = new VignettePass();
+    this.passes.push(this.vignettePass);
 
   }
   initLights() {
@@ -66,7 +73,7 @@ export default class WebGL {
     this.folder.add(this.params, 'mouse');
     this.folder.add(this.params, 'touch');
 
-    // init child GUI
+    // init scene.child GUI
     for (let i = 0; i < this.scene.children.length; i++) {
       const child = this.scene.children[i];
       if (typeof child.addGUI === 'function') {
@@ -74,6 +81,30 @@ export default class WebGL {
       }
     }
     this.folder.open();
+
+    // init postprocessing GUI
+    this.postProcessingFolder = this.folder.addFolder('PostProcessing');
+    for (let i = 0; i < this.passes.length; i++) {
+      const pass = this.passes[i];
+
+      const empty = Object.keys(pass.params).length === 0;
+      let containsNumber = false;
+      for (const key of Object.keys(pass.params)) {
+        if (typeof pass.params[key] === 'number') {
+          containsNumber = true;
+        }
+      }
+      if (!empty && containsNumber) {
+        const folder = this.postProcessingFolder.addFolder(pass.constructor.name);
+        for (const key of Object.keys(pass.params)) {
+          if (typeof pass.params[key] === 'number') {
+            folder.add(pass.params, key);
+            folder.open();
+          }
+        }
+      }
+    }
+    this.postProcessingFolder.open();
   }
   render() {
     if (this.params.postProcessing) {
@@ -81,8 +112,10 @@ export default class WebGL {
       this.composer.render(this.scene, this.camera);
 
       // Passes
-      this.composer.pass(this.fxaaPass);
-      this.composer.pass(this.vignettePass);
+      for (let i = 0; i < this.passes.length; i++) {
+        this.composer.pass(this.passes[i]);
+      }
+
       this.composer.toScreen();
 
     } else {
@@ -93,7 +126,7 @@ export default class WebGL {
   }
   rayCast() {
     this.raycaster.setFromCamera(this.mouse, this.camera);
-    const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+    const intersects = this.raycaster.intersectObject(this.cube, true);
     if (intersects.length > 0) {
       console.log('yo');
     }
@@ -121,13 +154,21 @@ export default class WebGL {
     if (!this.params.keyboard) return;
     console.log('keyUp');
   }
-  click() {
+  click(x, y, time) {
     if (!this.params.mouse) return;
     console.log('click');
+    this.originalMouse.x = x;
+    this.originalMouse.y = y;
+    this.mouse.x = (x / window.innerWidth - 0.5) * 2;
+    this.mouse.y = (y / window.innerHeight - 0.5) * 2;
   }
-  mouseMove() {
+  mouseMove(x, y, ime) {
     if (!this.params.mouse) return;
     console.log('mousemove');
+    this.originalMouse.x = x;
+    this.originalMouse.y = y;
+    this.mouse.x = (x / window.innerWidth - 0.5) * 2;
+    this.mouse.y = (y / window.innerHeight - 0.5) * 2;
   }
   touchStart() {
     if (!this.params.touch) return;
