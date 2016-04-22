@@ -2,8 +2,8 @@ import THREE from 'three';
 
 export default class Cube extends THREE.Object3D {
   constructor() {
+    console.log('to');
     super();
-
     this.geom = new THREE.BoxGeometry(10, 10, 10);
     this.mat = new THREE.MeshBasicMaterial({
       color: 0x00ff00,

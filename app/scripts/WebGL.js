@@ -8,7 +8,7 @@ const VignettePass = require('@superguigui/wagner/src/passes/vignette/VignettePa
 const NoisePass = require('@superguigui/wagner/src/passes/noise/noise');
 
 // Objects
-import Cube from './objects/Cube';
+import Cube from './objects/cube/Cube';
 
 export default class WebGL {
   constructor(params) {
@@ -86,23 +86,23 @@ export default class WebGL {
     this.postProcessingFolder = this.folder.addFolder('PostProcessing');
     for (let i = 0; i < this.passes.length; i++) {
       const pass = this.passes[i];
-
-      const empty = Object.keys(pass.params).length === 0;
+      pass.enabled = true;
       let containsNumber = false;
       for (const key of Object.keys(pass.params)) {
         if (typeof pass.params[key] === 'number') {
           containsNumber = true;
         }
       }
-      if (!empty && containsNumber) {
-        const folder = this.postProcessingFolder.addFolder(pass.constructor.name);
+      const folder = this.postProcessingFolder.addFolder(pass.constructor.name);
+      folder.add(pass, 'enabled');
+      if (containsNumber) {
         for (const key of Object.keys(pass.params)) {
           if (typeof pass.params[key] === 'number') {
             folder.add(pass.params, key);
-            folder.open();
           }
         }
       }
+      folder.open();
     }
     this.postProcessingFolder.open();
   }
@@ -113,7 +113,9 @@ export default class WebGL {
 
       // Passes
       for (let i = 0; i < this.passes.length; i++) {
-        this.composer.pass(this.passes[i]);
+        if (this.passes[i].enabled) {
+          this.composer.pass(this.passes[i]);
+        }
       }
 
       this.composer.toScreen();

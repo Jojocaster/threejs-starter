@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "THREE.js Starter Kit",
   "main": "app/index.js",
+  "aliasify": "./aliasifyConfig.js",
   "scripts": {
     "start": "npm run dev",
-    "dev": "budo app/scripts/index.js:build/main.js --dir ./public --live --open -- -t babelify -g glslify | node-sass -w app/styles/main.scss -o public/build/",
+    "dev": "budo app/scripts/index.js:build/main.js --dir ./public --live --open -- -t babelify -g glslify  | node-sass -w app/styles/main.scss -o public/build/",
     "build": "browserify -t babelify -t stripify -g glslify app/scripts/index.js | uglifyjs -o public/build/main.js"
   },
   "repository": {
@@ -27,6 +28,7 @@
     "ua-device-type": "0.0.4"
   },
   "devDependencies": {
+    "aliasify": "^2.0.0",
     "babel-eslint": "^6.0.2",
     "babel-plugin-transform-es2015-modules-commonjs": "*",
     "babel-preset-es2015": "*",
