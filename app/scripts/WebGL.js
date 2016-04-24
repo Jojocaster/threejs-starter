@@ -54,7 +54,7 @@ export default class WebGL {
     this.passes.push(this.fxaaPass);
     this.noisePass = new NoisePass();
     this.passes.push(this.noisePass);
-    this.vignettePass = new VignettePass();
+    this.vignettePass = new VignettePass({});
     this.passes.push(this.vignettePass);
 
   }
