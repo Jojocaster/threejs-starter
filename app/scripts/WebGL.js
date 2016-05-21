@@ -73,14 +73,6 @@ export default class WebGL {
     this.folder.add(this.params, 'mouse');
     this.folder.add(this.params, 'touch');
 
-    // init scene.child GUI
-    for (let i = 0; i < this.scene.children.length; i++) {
-      const child = this.scene.children[i];
-      if (typeof child.addGUI === 'function') {
-        child.addGUI(this.folder);
-      }
-    }
-    this.folder.open();
 
     // init postprocessing GUI
     this.postProcessingFolder = this.folder.addFolder('PostProcessing');
@@ -105,6 +97,15 @@ export default class WebGL {
       folder.open();
     }
     this.postProcessingFolder.open();
+
+    // init scene.child GUI
+    for (let i = 0; i < this.scene.children.length; i++) {
+      const child = this.scene.children[i];
+      if (typeof child.addGUI === 'function') {
+        child.addGUI(this.folder);
+      }
+    }
+    this.folder.open();
   }
   render() {
     if (this.params.postProcessing) {
