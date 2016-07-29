@@ -1,5 +1,6 @@
 import THREE from 'three';
 window.THREE = THREE;
+const OrbitControls = require('three-orbit-controls')(THREE);
 import WAGNER from '@superguigui/wagner';
 
 // Passes
@@ -19,6 +20,7 @@ export default class WebGL {
       keyboard: params.keyboard || false,
       mouse: params.mouse || false,
       touch: params.touch || false,
+      controls: params.controls || false,
     };
 
     this.mouse = new THREE.Vector2();
@@ -39,6 +41,9 @@ export default class WebGL {
     this.initPostprocessing();
     this.initLights();
     this.initObjects();
+    if (this.params.controls) {
+      this.controls = new OrbitControls(this.camera);
+    }
 
     if (window.DEBUG || window.DEVMODE) this.initGUI();
 
@@ -72,6 +77,7 @@ export default class WebGL {
     this.folder.add(this.params, 'keyboard');
     this.folder.add(this.params, 'mouse');
     this.folder.add(this.params, 'touch');
+    this.folder.add(this.params, 'controls');
 
 
     // init postprocessing GUI

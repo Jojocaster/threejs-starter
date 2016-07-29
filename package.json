@@ -25,6 +25,7 @@
     "querystringparser": "^0.1.1",
     "raf": "*",
     "three": "*",
+    "three-orbit-controls": "^72.0.0",
     "ua-device-type": "0.0.4"
   },
   "devDependencies": {

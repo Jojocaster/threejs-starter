@@ -67,6 +67,7 @@ domReady(() => {
     },
     keyboard: false,
     mouse: false,
+    controls: false,
   });
   document.body.appendChild(webGL.renderer.domElement);
 
