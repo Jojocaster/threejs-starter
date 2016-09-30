@@ -23,29 +23,37 @@ function resize() {
 }
 // KeyBoard
 function keyPress(e) {
+  if (!webGL.params.events.keyboard.press) return;
   webGL.keyPress(e);
 }
 function keyDown(e) {
+  if (!webGL.params.events.keyboard.down) return;
   webGL.keyDown(e);
 }
 function keyUp(e) {
+  if (!webGL.params.events.keyboard.up) return;
   webGL.keyUp(e);
 }
 // Mouse
 function click(e) {
+  if (!webGL.params.events.mouse.click) return;
   webGL.click(e.clientX, e.clientY, e.timeStamp);
 }
 function mouseMove(e) {
+  if (!webGL.params.events.mouse.move) return;
   webGL.mouseMove(e.clientX, e.clientY, e.timeStamp);
 }
 // Touch
 function touchStart(e) {
+  if (!webGL.params.events.touch.start) return;
   webGL.touchStart(e.touches);
 }
 function touchEnd(e) {
+  if (!webGL.params.events.touch.end) return;
   webGL.touchEnd(e.touches);
 }
 function touchMove(e) {
+  if (!webGL.params.events.touch.move) return;
   webGL.touchMove(e.touches);
 }
 
@@ -65,8 +73,10 @@ domReady(() => {
       width: window.innerWidth,
       height: window.innerHeight,
     },
-    keyboard: false,
-    mouse: false,
+    mouse: {
+      click: false,
+      move: false,
+    },
     controls: false,
   });
   document.body.appendChild(webGL.renderer.domElement);

@@ -1,4 +1,4 @@
-import THREE from 'three';
+const THREE = require('three');
 window.THREE = THREE;
 const OrbitControls = require('three-orbit-controls')(THREE);
 import WAGNER from '@superguigui/wagner';
@@ -9,7 +9,7 @@ const VignettePass = require('@superguigui/wagner/src/passes/vignette/VignettePa
 const NoisePass = require('@superguigui/wagner/src/passes/noise/noise');
 
 // Objects
-import Cube from './objects/cube/Cube';
+import Cube from './objects/Cube';
 
 export default class WebGL {
   constructor(params) {
@@ -17,9 +17,22 @@ export default class WebGL {
       name: params.name || 'WebGL',
       device: params.device || 'desktop',
       postProcessing: params.postProcessing || false,
-      keyboard: params.keyboard || false,
-      mouse: params.mouse || false,
-      touch: params.touch || false,
+      events: {
+        keyboard: {
+          press: false,
+          up: false,
+          down: false,
+        },
+        mouse: {
+          click: false,
+          move: false,
+        },
+        touch: {
+          start: false,
+          move: false,
+          end: false,
+        },
+      },
       controls: params.controls || false,
     };
 
@@ -41,9 +54,8 @@ export default class WebGL {
     this.initPostprocessing();
     this.initLights();
     this.initObjects();
-    if (this.params.controls) {
-      this.controls = new OrbitControls(this.camera);
-    }
+    this.controls = new OrbitControls(this.camera);
+    this.controls.enabled = this.params.controls;
 
     if (window.DEBUG || window.DEVMODE) this.initGUI();
 
@@ -73,18 +85,42 @@ export default class WebGL {
   }
   initGUI() {
     this.folder = window.gui.addFolder(this.params.name);
-    this.folder.add(this.params, 'postProcessing');
-    this.folder.add(this.params, 'keyboard');
-    this.folder.add(this.params, 'mouse');
-    this.folder.add(this.params, 'touch');
-    this.folder.add(this.params, 'controls');
+    for (const key in this.params) {
+      if (!this.params.hasOwnProperty(key)) continue;
+      const obj = this.params[key];
+      if (typeof obj !== 'object') {
 
+        const controller = this.folder.add(this.params, key);
+        if (key === 'controls') {
+          controller.onChange((value) => {
+            this.controls.enabled = value;
+          });
+        }
 
+      }
+    }
+    const folderEvents = this.folder.addFolder('Events');
+    for (const key in this.params.events) {
+      // skip loop if the property is from prototype
+      if (!this.params.events.hasOwnProperty(key)) continue;
+
+      const obj = this.params.events[key];
+      if (typeof obj !== 'object') {
+        folderEvents.add(this.params.events, key);
+      } else {
+        const folder = folderEvents.addFolder(key);
+        for (const keyObj in obj) {
+          if (!obj.hasOwnProperty(keyObj)) continue;
+          folder.add(obj, keyObj);
+        }
+        folder.open();
+      }
+    }
     // init postprocessing GUI
     this.postProcessingFolder = this.folder.addFolder('PostProcessing');
     for (let i = 0; i < this.passes.length; i++) {
       const pass = this.passes[i];
-      pass.enabled = true;
+      if (pass.enabled === undefined) pass.enabled = true;
       let containsNumber = false;
       for (const key of Object.keys(pass.params)) {
         if (typeof pass.params[key] === 'number') {
@@ -102,7 +138,7 @@ export default class WebGL {
       }
       folder.open();
     }
-    this.postProcessingFolder.open();
+    // this.postProcessingFolder.open();
 
     // init scene.child GUI
     for (let i = 0; i < this.scene.children.length; i++) {
@@ -137,7 +173,7 @@ export default class WebGL {
     this.raycaster.setFromCamera(this.mouse, this.camera);
     const intersects = this.raycaster.intersectObject(this.cube, true);
     if (intersects.length > 0) {
-      console.log('yo');
+      console.log('intersects');
     }
   }
   // Events
@@ -151,45 +187,23 @@ export default class WebGL {
 
     this.renderer.setSize(width, height);
   }
-  keyPress() {
-    if (!this.params.keyboard) return;
-    console.log('keyPress');
-  }
-  keyDown() {
-    if (!this.params.keyboard) return;
-    console.log('keyDown');
-  }
-  keyUp() {
-    if (!this.params.keyboard) return;
-    console.log('keyUp');
-  }
+  keyPress() {}
+  keyDown() {}
+  keyUp() {}
   click(x, y, time) {
-    if (!this.params.mouse) return;
-    console.log('click');
     this.originalMouse.x = x;
     this.originalMouse.y = y;
     this.mouse.x = (x / window.innerWidth - 0.5) * 2;
     this.mouse.y = (y / window.innerHeight - 0.5) * 2;
   }
   mouseMove(x, y, ime) {
-    if (!this.params.mouse) return;
-    console.log('mousemove');
     this.originalMouse.x = x;
     this.originalMouse.y = y;
     this.mouse.x = (x / window.innerWidth - 0.5) * 2;
     this.mouse.y = (y / window.innerHeight - 0.5) * 2;
   }
-  touchStart() {
-    if (!this.params.touch) return;
-    console.log('touchstart');
-  }
-  touchEnd() {
-    if (!this.params.touch) return;
-    console.log('touchend');
-  }
-  touchMove() {
-    if (!this.params.touch) return;
-    console.log('touchmove');
-  }
+  touchStart() {}
+  touchEnd() {}
+  touchMove() {}
 
 }
