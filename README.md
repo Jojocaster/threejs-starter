@@ -1,8 +1,9 @@
 threejs-starter
 ===================
 
-WIP
+NODE: 6.3.0
 
+NPM: 3.10.3
 
 
 It uses Three.js and Greensock as depencies.
