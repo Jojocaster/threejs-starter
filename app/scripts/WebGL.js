@@ -19,18 +19,18 @@ export default class WebGL {
       postProcessing: params.postProcessing || false,
       events: {
         keyboard: {
-          press: false,
-          up: false,
-          down: false,
+          press: params.events.keyboard.press || false,
+          up: params.events.keyboard.up || false,
+          down: params.events.keyboard.down || false,
         },
         mouse: {
-          click: false,
-          move: false,
+          click: params.events.mouse.click || false,
+          move: params.events.mouse.move || false,
         },
         touch: {
-          start: false,
-          move: false,
-          end: false,
+          start: params.events.touch.start || false,
+          move: params.events.touch.move || false,
+          end: params.events.touch.end || false,
         },
       },
       controls: params.controls || false,
@@ -63,7 +63,6 @@ export default class WebGL {
   initPostprocessing() {
     this.composer = new WAGNER.Composer(this.renderer);
     this.composer.setSize(window.innerWidth, window.innerHeight);
-    window.composer = this.composer;
 
     // Add pass and automatic gui
     this.passes = [];

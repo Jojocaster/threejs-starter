@@ -6,3 +6,15 @@ body {
   height: 100%;
   overflow: hidden;
 }
+#debug {
+  position: absolute;
+  top:0;
+  left: 0;
+  margin: 0;
+  padding: 20px;
+  color:white;
+  font-family: helvetica;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+}

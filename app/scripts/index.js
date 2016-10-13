@@ -7,7 +7,7 @@ import dat from 'dat-gui';
 import 'gsap';
 
 // Vars
-window.DEBUG = true;
+window.DEBUG = false;
 let device;
 let webGL;
 
@@ -73,9 +73,10 @@ domReady(() => {
       width: window.innerWidth,
       height: window.innerHeight,
     },
-    mouse: {
-      click: false,
-      move: false,
+    events: {
+      keyboard: {},
+      mouse: {},
+      touch: {},
     },
     controls: false,
   });
@@ -94,6 +95,13 @@ domReady(() => {
   window.addEventListener('touchstart', touchStart);
   window.addEventListener('touchend', touchEnd);
   window.addEventListener('touchmove', touchMove);
+
+  if (window.DEBUG) {
+    const p = document.createElement('p');
+    p.id = 'debug';
+    p.innerHTML = 'DEBUG';
+    document.body.appendChild(p);
+  }
 
   // let's start
   animate();
