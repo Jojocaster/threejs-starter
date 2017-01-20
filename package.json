@@ -44,5 +44,11 @@
     "node-sass": "^3.10.1",
     "stripify": "*",
     "uglifyjs": "*"
+  },
+  "babel": {
+    "presets": ["es2015"],
+    "plugins": [
+      "transform-es2015-modules-commonjs"
+    ]
   }
 }
